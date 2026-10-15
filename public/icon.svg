@@ -1,0 +1,10 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- "D" for dinner: a fork as the stem and a plate as the bowl -->
+  <rect width="512" height="512" rx="112" fill="#c2410c"/>
+  <g fill="#fbf7f2">
+    <rect x="124" y="92" width="16" height="100" rx="8"/><rect x="152" y="92" width="16" height="100" rx="8"/><rect x="180" y="92" width="16" height="100" rx="8"/>
+    <rect x="124" y="164" width="72" height="50" rx="25"/><rect x="147" y="200" width="26" height="224" rx="13"/>
+    <circle cx="316" cy="258" r="124"/>
+  </g>
+  <circle cx="316" cy="258" r="88" fill="none" stroke="#f2d3bd" stroke-width="12"/>
+</svg>

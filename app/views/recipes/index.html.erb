@@ -1,0 +1,77 @@
+<h1>It's dinner time!</h1>
+<p class="lead">Tell us what you have at home and we'll find recipes you can cook.</p>
+
+<%= form_with url: root_path, method: :get, class: "search",
+                      data: { turbo: false, controller: "loading", action: "submit->loading#start pageshow@window->loading#reset" } do %>
+  <%# Without JavaScript this is a plain text field (type ingredients separated by commas).
+      The "chips" Stimulus controller turns it into a list of tags. %>
+  <div class="chips-field" data-controller="chips">
+    <ul class="chips" data-chips-target="list"></ul>
+    <input type="text" name="ingredients" value="<%= @ingredients.join(", ") %>"
+           placeholder="Add an ingredient, e.g. chicken"
+           autocomplete="off" autocapitalize="none" enterkeyhint="enter" autofocus
+           aria-label="Ingredients you have"
+           data-chips-target="input"
+           data-action="keydown->chips#keydown input->chips#input">
+    <%# Only visible with JavaScript (see .chips-ready): adds the typed ingredient, like Enter. %>
+    <button type="button" class="add" aria-label="Add ingredient" data-action="chips#add">+</button>
+    <%# Only visible with JavaScript and at least one ingredient: removes them all at once. %>
+    <button type="button" class="clear" hidden data-chips-target="clear" data-action="chips#clear">Clear all</button>
+  </div>
+  <button type="submit">Find recipes</button>
+<% end %>
+
+<p class="note">We assume you have salt, black pepper, water and cooking oil.</p>
+
+<%# While a search runs, loading#start hides the old content and shows this message. %>
+<p class="loading" role="status" hidden data-loading-message>Looking for recipes…</p>
+
+<div data-loading-content>
+<%# First visit: a few ready-made searches so nobody faces an empty page. %>
+<% if @results.nil? %>
+  <p class="examples">
+    Try:
+    <% [ "chicken, rice", "eggs, tomato", "pasta, garlic, cheese" ].each do |example| %>
+      <%= link_to example, root_path(ingredients: example.delete(" ")), class: "example" %>
+    <% end %>
+  </p>
+<% end %>
+
+<% if @results %>
+  <% if @results.empty? %>
+    <p class="empty">No recipes found with these ingredients. Try adding more or different ones.</p>
+  <% else %>
+    <h2><%= pluralize(@results.size, "recipe") %> for you</h2>
+    <ul class="results">
+      <% @results.each do |result| %>
+        <li class="card">
+          <%= link_to recipe_path(result.recipe, ingredients: @ingredients.join(",")), class: "card-link" do %>
+            <div class="thumb">
+              <% if result.recipe.image_url.present? %>
+                <%= image_tag result.recipe.image_url, alt: "", loading: "lazy", referrerpolicy: "no-referrer",
+                            data: { controller: "image-fallback", action: "error->image-fallback#hide" } %>
+              <% end %>
+            </div>
+            <strong class="title"><%= result.recipe.title %></strong>
+          <% end %>
+          <% minutes = [ result.recipe.prep_time, result.recipe.cook_time ].compact.sum %>
+          <p class="meta">
+            <% if minutes.positive? %><span>⏱ <%= minutes %> min</span><% end %>
+            <% if result.recipe.ratings %><span>★ <%= result.recipe.ratings %></span><% end %>
+          </p>
+          <p class="have">You have <%= result.available_count %> of <%= result.total_lines %> ingredients</p>
+          <progress value="<%= result.available_count %>" max="<%= result.total_lines %>"></progress>
+          <ul class="uses">
+            <% result.matched_ingredients.each do |ingredient| %>
+              <li>✓ <%= ingredient %></li>
+            <% end %>
+          </ul>
+          <% if result.missing_lines.any? %>
+            <p class="missing-list">Missing: <%= result.missing_lines.join("; ") %></p>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% end %>
+<% end %>
+</div>

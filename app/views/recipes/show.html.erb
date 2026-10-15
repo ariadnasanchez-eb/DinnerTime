@@ -1,0 +1,31 @@
+<% content_for :title, @recipe.title %>
+
+<article class="recipe">
+  <%# Back to the search that brought us here, keeping the ingredients. %>
+  <%= link_to "← Back to results", root_path(ingredients: @ingredients.join(",").presence) %>
+
+  <h1><%= @recipe.title %></h1>
+
+  <% if @recipe.image_url.present? %>
+    <%= image_tag @recipe.image_url, alt: @recipe.title, class: "hero", referrerpolicy: "no-referrer",
+                            data: { controller: "image-fallback", action: "error->image-fallback#hide" } %>
+  <% end %>
+
+  <ul class="facts">
+    <% if @recipe.prep_time %><li>Prep: <%= @recipe.prep_time %> min</li><% end %>
+    <% if @recipe.cook_time %><li>Cook: <%= @recipe.cook_time %> min</li><% end %>
+    <% if @recipe.ratings %><li>Rating: <%= @recipe.ratings %> / 5</li><% end %>
+    <% if @recipe.category.present? %><li>Category: <%= @recipe.category %></li><% end %>
+    <% if @recipe.author.present? %><li>By <%= @recipe.author %></li><% end %>
+  </ul>
+
+  <h2>Ingredients</h2>
+  <ul class="ingredients">
+    <% @lines.each do |line, missing| %>
+      <%= tag.li class: ("missing" if missing) do %>
+        <%= line.raw_text %>
+        <% if missing %><span class="tag">missing</span><% end %>
+      <% end %>
+    <% end %>
+  </ul>
+</article>

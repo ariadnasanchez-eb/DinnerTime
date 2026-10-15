@@ -1,0 +1,83 @@
+/* Minimal styles: a warm look that reads well on a phone and a laptop. No libraries. */
+
+:root {
+  --bg: #fbf7f2;
+  --card: #ffffff;
+  --text: #2b2118;
+  --muted: #7a6a5c;
+  --line: #eadfd2;
+  --accent: #c2410c;
+  --accent-soft: #fde7d6;
+  --warn: #9a5b00;
+  --warn-soft: #fff0cc;
+  --radius: 14px;
+}
+
+* { box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0; color: var(--text); background: var(--bg); line-height: 1.5; }
+.container { max-width: 1120px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+h1 { font-size: clamp(1.9rem, 5vw, 2.6rem); line-height: 1.15; margin: 0 0 .4rem; }
+h2 { margin: 2rem 0 .8rem; }
+a { color: var(--accent); }
+.lead { color: var(--muted); font-size: 1.1rem; margin: 0 0 1.4rem; }
+.note { color: var(--muted); font-size: .9rem; margin: .8rem 0 0; }
+
+/* Search form and ingredient chips */
+.search { display: flex; gap: .6rem; flex-wrap: wrap; }
+.chips-field { flex: 1 1 20rem; display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; padding: .5rem .8rem; background: var(--card); border: 2px solid var(--line); border-radius: var(--radius); }
+.chips-field:focus-within { border-color: var(--accent); }
+.chips-field input { flex: 1 1 9rem; min-width: 9rem; border: 0; outline: 0; font: inherit; padding: .4rem 0; background: transparent; }
+.chips { display: contents; list-style: none; margin: 0; padding: 0; }
+.chip { display: inline-flex; align-items: center; gap: .2rem; background: var(--accent-soft); color: #7c2d0a; border-radius: 999px; padding: .2rem .4rem .2rem .85rem; font-weight: 500; }
+.chip button { border: 0; background: transparent; color: inherit; font-size: 1.2rem; line-height: 1; cursor: pointer; padding: 0 .35rem; border-radius: 999px; }
+.chip button:hover { background: rgba(0, 0, 0, .1); }
+button[type=submit] { background: var(--accent); color: #fff; border: 0; border-radius: var(--radius); padding: .8rem 1.4rem; font: inherit; font-weight: 600; cursor: pointer; }
+button[type=submit]:hover { filter: brightness(1.1); }
+
+/* Results: one column on a phone, two on a laptop */
+.results { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1.2rem; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; display: flex; flex-direction: column; }
+.card-link { color: inherit; text-decoration: none; display: block; }
+.card-link:hover .title { color: var(--accent); }
+/* The tinted block with a plate shows while the photo loads, when there is none, or when it fails. */
+.thumb { aspect-ratio: 4 / 3; background: var(--accent-soft); position: relative; display: grid; place-items: center; }
+.thumb::before { content: "🍽️"; font-size: 2.6rem; opacity: .5; }
+.thumb img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+img.broken { display: none; } /* set by image_fallback_controller.js when a photo fails to load */
+.title { display: block; padding: .8rem 1rem .2rem; font-size: 1.05rem; }
+.have { margin: .2rem 1rem 0; font-weight: 600; font-size: .95rem; }
+progress { display: block; width: calc(100% - 2rem); height: .5rem; margin: .4rem 1rem 0; accent-color: var(--accent); }
+.missing-list { margin: .6rem 1rem 1rem; color: var(--warn); font-size: .85rem; }
+.card .have:last-child { margin-bottom: 1rem; }
+.empty { background: var(--card); border: 2px dashed var(--line); border-radius: var(--radius); padding: 1.2rem; color: var(--muted); }
+
+/* Recipe page */
+.hero { width: 100%; max-height: 24rem; object-fit: cover; border-radius: var(--radius); display: block; }
+.facts { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; margin: 1rem 0; }
+.facts li { background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: .2rem .8rem; font-size: .9rem; color: var(--muted); }
+.ingredients { list-style: none; padding: 0; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); }
+.ingredients li { padding: .6rem 1rem; border-bottom: 1px solid var(--line); }
+.ingredients li:last-child { border-bottom: 0; }
+.ingredients li.missing { background: var(--warn-soft); color: var(--warn); }
+.tag { font-size: .75rem; font-weight: 600; background: #ffd98a; border-radius: 6px; padding: .05rem .4rem; margin-left: .4rem; }
+
+/* The recipe page is mostly text: keep it narrower than the results grid so lines stay easy to read. */
+.recipe { max-width: 760px; margin: 0 auto; }
+
+/* Quick UX wins */
+.examples { color: var(--muted); margin: 1.2rem 0 0; }
+.example { display: inline-block; margin: .2rem .3rem 0 0; padding: .15rem .8rem; border: 1px solid var(--line); border-radius: 999px; background: var(--card); text-decoration: none; }
+.example:hover { border-color: var(--accent); }
+.meta { display: flex; gap: .8rem; margin: 0 1rem; color: var(--muted); font-size: .9rem; }
+.uses { display: flex; flex-wrap: wrap; gap: .3rem; list-style: none; margin: .6rem 1rem 0; padding: 0; }
+.uses li { background: #e3f3e6; color: #1e6b34; border-radius: 999px; padding: .05rem .6rem; font-size: .82rem; }
+.loading { color: var(--muted); font-size: 1.1rem; margin: 2rem 0; }
+.loading::before { content: ""; display: inline-block; width: 1rem; height: 1rem; margin-right: .6rem; vertical-align: -.15rem; border: 3px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+button[type=submit]:disabled { opacity: .7; cursor: progress; }
+
+/* The + button next to the ingredient field (needs JavaScript, so hidden until it is ready) */
+.chips-field .add { display: none; border: 0; border-radius: 999px; width: 2rem; height: 2rem; background: var(--accent-soft); color: var(--accent); font-size: 1.4rem; line-height: 1; cursor: pointer; }
+.chips-ready .add { display: inline-flex; align-items: center; justify-content: center; }
+.chips-field .clear { border: 0; background: none; color: var(--muted); font: inherit; font-size: .9rem; text-decoration: underline; cursor: pointer; padding: .2rem .3rem; }
+.chips-field .clear:hover { color: var(--accent); }
